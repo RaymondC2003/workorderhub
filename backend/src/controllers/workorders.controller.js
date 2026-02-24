@@ -28,6 +28,25 @@ export function getById(req, res, next) {
   }
 }
 
+export function update(req, res, next) {
+  try {
+    const item = service.update(req.params.id, req.body);
+    success(req, res, item);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export function remove(req, res, next) {
+  try {
+    service.remove(req.params.id);
+    if (req.requestId) res.setHeader("X-Request-Id", req.requestId);
+    res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
+}
+
 export function changeStatus(req, res, next) {
   try {
     const item = service.changeStatus(req.params.id, req.body.status);

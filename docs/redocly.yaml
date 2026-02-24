@@ -1,0 +1,11 @@
+apis:
+  workorderhub:
+    root: openapi.yaml
+
+openapi:
+  theme:
+    sidebar:
+      backgroundColor: "#0f172a"
+    rightPanel:
+      backgroundColor: "#1e293b"
+      textColor: "#f1f5f9"

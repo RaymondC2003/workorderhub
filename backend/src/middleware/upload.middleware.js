@@ -2,7 +2,7 @@ import multer from "multer";
 import { AppError } from "../utils/errors.util.js";
 
 const upload = multer({
-  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
+  limits: { fileSize: 2 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     if (!file.originalname.endsWith(".csv")) {
       return cb(

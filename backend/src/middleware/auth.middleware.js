@@ -1,9 +1,10 @@
 import { AppError } from "../utils/errors.util.js";
 
 export default (req, res, next) => {
-  const key = req.headers["x-api-key"];
+  const key = (req.headers["x-api-key"] || "").trim();
+  const expected = (process.env.API_KEY || "").trim();
 
-  if (!key || key !== process.env.API_KEY) {
+  if (!expected || key !== expected) {
     return next(new AppError(401, "UNAUTHORIZED", "Invalid API key"));
   }
 

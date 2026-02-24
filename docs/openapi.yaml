@@ -1,0 +1,387 @@
+openapi: 3.0.3
+info:
+  title: WorkOrderHub API
+  description: Lean work order management API. All /api/v1/* routes require x-api-key.
+  version: 1.0.0
+  x-logo:
+    url: logo.png
+    altText: WorkOrderHub
+
+servers:
+  - url: http://localhost:3001
+    description: Local
+
+security:
+  - ApiKeyAuth: []
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      security: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  requestId:
+                    type: string
+                    format: uuid
+                  status:
+                    type: string
+                    example: ok
+                  time:
+                    type: string
+                    format: date-time
+
+  /api/v1/workorders:
+    get:
+      summary: List work orders
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [NEW, IN_PROGRESS, BLOCKED, DONE]
+        - name: department
+          in: query
+          schema:
+            type: string
+            enum: [FACILITIES, IT, SECURITY, HR]
+        - name: priority
+          in: query
+          schema:
+            type: string
+            enum: [LOW, MEDIUM, HIGH]
+        - name: assignee
+          in: query
+          schema:
+            type: string
+        - name: q
+          in: query
+          description: Keyword search on title
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Paginated list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessPaginated'
+    post:
+      summary: Create work order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWorkOrder'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessWorkOrder'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/v1/workorders/bulk-upload:
+    post:
+      summary: Bulk upload CSV
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: CSV file (max 2MB)
+      responses:
+        '200':
+          description: Upload result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessBulkUpload'
+        '413':
+          description: File too large
+        '415':
+          description: Not a CSV file
+
+  /api/workorders/{id}:
+    get:
+      summary: Get work order by ID
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessWorkOrder'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Update work order
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWorkOrder'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessWorkOrder'
+        '400':
+          description: Validation error
+        '404':
+          description: Not found
+    delete:
+      summary: Delete work order
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '204':
+          description: No content
+        '404':
+          description: Not found
+
+  /api/v1/workorders/{id}/status:
+    patch:
+      summary: Change status
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [NEW, IN_PROGRESS, BLOCKED, DONE]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessWorkOrder'
+        '400':
+          description: Invalid status
+        '404':
+          description: Not found
+        '409':
+          description: Invalid transition (INVALID_TRANSITION)
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API key (env API_KEY)
+
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  schemas:
+    WorkOrder:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          minLength: 5
+        description:
+          type: string
+          minLength: 10
+        department:
+          type: string
+          enum: [FACILITIES, IT, SECURITY, HR]
+        priority:
+          type: string
+          enum: [LOW, MEDIUM, HIGH]
+        status:
+          type: string
+          enum: [NEW, IN_PROGRESS, BLOCKED, DONE]
+        requesterName:
+          type: string
+          minLength: 3
+        assignee:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateWorkOrder:
+      type: object
+      required: [title, description, department, priority, requesterName]
+      properties:
+        title:
+          type: string
+          minLength: 5
+        description:
+          type: string
+          minLength: 10
+        department:
+          type: string
+          enum: [FACILITIES, IT, SECURITY, HR]
+        priority:
+          type: string
+          enum: [LOW, MEDIUM, HIGH]
+        requesterName:
+          type: string
+          minLength: 3
+        assignee:
+          type: string
+          nullable: true
+
+    UpdateWorkOrder:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 5
+        description:
+          type: string
+          minLength: 10
+        priority:
+          type: string
+          enum: [LOW, MEDIUM, HIGH]
+        assignee:
+          type: string
+          nullable: true
+
+    SuccessWorkOrder:
+      type: object
+      properties:
+        requestId:
+          type: string
+          format: uuid
+        success:
+          type: boolean
+          example: true
+        data:
+          $ref: '#/components/schemas/WorkOrder'
+
+    SuccessPaginated:
+      type: object
+      properties:
+        requestId:
+          type: string
+          format: uuid
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/WorkOrder'
+            page:
+              type: integer
+            limit:
+              type: integer
+            total:
+              type: integer
+
+    SuccessBulkUpload:
+      type: object
+      properties:
+        requestId:
+          type: string
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            uploadId:
+              type: string
+            strategy:
+              type: string
+              example: PARTIAL_ACCEPTANCE
+            totalRows:
+              type: integer
+            accepted:
+              type: integer
+            rejected:
+              type: integer
+            errors:
+              type: array
+              items:
+                type: object
+                properties:
+                  row:
+                    type: integer
+                  field:
+                    type: string
+                  reason:
+                    type: string
+
+    Error:
+      type: object
+      properties:
+        requestId:
+          type: string
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: array

@@ -1,13 +1,8 @@
 import store from "../data/workorders.store.js";
 import { AppError } from "../utils/errors.util.js";
 import { randomUUID } from "crypto";
+import { STATUS_TRANSITIONS } from "../utils/constants.js";
 
-const transitions = {
-  NEW: ["IN_PROGRESS"],
-  IN_PROGRESS: ["BLOCKED", "DONE"],
-  BLOCKED: ["IN_PROGRESS"],
-  DONE: []
-};
 
 export function create(data) {
   const id = randomUUID();
@@ -82,10 +77,28 @@ export function getById(id) {
   return item;
 }
 
+export function update(id, data) {
+  const item = getById(id);
+  const allowed = ["title", "description", "priority", "assignee"];
+  for (const key of allowed) {
+    if (data[key] !== undefined) {
+      item[key] = data[key];
+    }
+  }
+  item.updatedAt = new Date().toISOString();
+  return item;
+}
+
+export function remove(id) {
+  const item = getById(id);
+  store.delete(id);
+  return item;
+}
+
 export function changeStatus(id, status) {
   const item = getById(id);
 
-  if (!transitions[item.status].includes(status)) {
+  if (!STATUS_TRANSITIONS[item.status].includes(status)) {
     throw new AppError(409, "INVALID_TRANSITION", "Invalid transition");
   }
 

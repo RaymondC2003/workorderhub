@@ -1,6 +1,10 @@
 import express from "express";
 import * as controller from "../controllers/workorders.controller.js";
-import { validateCreate } from "../middleware/validate.middleware.js";
+import {
+  validateCreate,
+  validateUpdate,
+  validateStatus
+} from "../middleware/validate.middleware.js";
 import upload from "../middleware/upload.middleware.js";
 import * as bulkController from "../controllers/bulk.controller.js";
 
@@ -16,6 +20,8 @@ router.post(
 );
 
 router.get("/:id", controller.getById);
-router.patch("/:id/status", controller.changeStatus);
+router.put("/:id", validateUpdate, controller.update);
+router.patch("/:id/status", validateStatus, controller.changeStatus);
+router.delete("/:id", controller.remove);
 
 export default router;

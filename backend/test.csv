@@ -1,4 +1,7 @@
 title,description,department,priority,requesterName,assignee
-Fix server,Server is down,IT,HIGH,Raymond,Tech Team
-Broken door,Main door broken,FACILITIES,MEDIUM,John,
-Bad row,Short,WRONG,HIGH,A,
+Fix leaking tap in break room,Water leak under sink in building A break room.,FACILITIES,HIGH,Jane Smith,facilities@company.com
+VPN access for new hire,New employee needs VPN and laptop setup for remote work.,IT,MEDIUM,John Doe,
+Replace fire extinguisher 2B,Expired extinguisher in corridor 2B needs replacement.,SECURITY,LOW,Bob Wilson,security@company.com
+Update HR policy handbook,Revise section 4.2 and publish updated PDF to intranet.,HR,MEDIUM,Alice Brown,hr@company.com
+Broken HVAC in conference room,Conference room 3 is too cold; thermostat unresponsive.,FACILITIES,HIGH,Raymond Choy,
+Printer not working in lobby,Main lobby printer shows paper jam but tray is empty.,IT,LOW,Maria Garcia,it-support@company.com
