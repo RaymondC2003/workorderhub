@@ -1,10 +1,9 @@
-const express = require("express");
-const requestId = require("./middleware/requestId.middleware");
-const auth = require("./middleware/auth.middleware");
-const notFound = require("./middleware/notfound.middleware");
-const errorHandler = require("./middleware/error.middleware");
-
-const workOrderRoutes = require("./routes/workorders.routes");
+import express from "express";
+import requestId from "./middleware/requestId.middleware.js";
+import auth from "./middleware/auth.middleware.js";
+import notFound from "./middleware/notfound.middleware.js";
+import errorHandler from "./middleware/error.middleware.js";
+import workOrderRoutes from "./routes/workorders.routes.js";
 
 const app = express();
 
@@ -21,4 +20,4 @@ app.use("/api/workorders", workOrderRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
-module.exports = app;
+export default app;

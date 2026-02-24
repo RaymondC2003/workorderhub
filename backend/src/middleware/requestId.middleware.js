@@ -1,6 +1,6 @@
-const { randomUUID } = require("crypto");
+import { randomUUID } from "crypto";
 
-module.exports = (req, res, next) => {
+export default (req, res, next) => {
   req.requestId = randomUUID();
   next();
 };

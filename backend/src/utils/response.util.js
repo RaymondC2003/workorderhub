@@ -1,12 +1,12 @@
-exports.success = (req, res, data, status = 200) => {
+export function success(req, res, data, status = 200) {
   res.status(status).json({
     requestId: req.requestId,
     success: true,
     data
   });
-};
+}
 
-exports.error = (req, res, err) => {
+export function error(req, res, err) {
   res.status(err.statusCode).json({
     requestId: req.requestId,
     success: false,
@@ -16,4 +16,4 @@ exports.error = (req, res, err) => {
       details: err.details || []
     }
   });
-};
+}

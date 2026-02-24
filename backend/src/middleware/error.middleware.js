@@ -1,6 +1,6 @@
-const { error } = require("../utils/response.util");
+import { error } from "../utils/response.util.js";
 
-module.exports = (err, req, res, next) => {
+export default (err, req, res, next) => {
   if (!err.statusCode) {
     err.statusCode = 500;
     err.code = "INTERNAL_ERROR";

@@ -1,2 +1,2 @@
 const store = new Map();
-module.exports = store;
+export default store;

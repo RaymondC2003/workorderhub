@@ -1,6 +1,6 @@
-const store = require("../data/workorders.store");
-const { AppError } = require("../utils/errors.util");
-const { randomUUID } = require("crypto");
+import store from "../data/workorders.store.js";
+import { AppError } from "../utils/errors.util.js";
+import { randomUUID } from "crypto";
 
 const transitions = {
   NEW: ["IN_PROGRESS"],
@@ -9,7 +9,7 @@ const transitions = {
   DONE: []
 };
 
-exports.create = (data) => {
+export function create(data) {
   const id = randomUUID();
   const now = new Date().toISOString();
 
@@ -23,9 +23,9 @@ exports.create = (data) => {
 
   store.set(id, workOrder);
   return workOrder;
-};
+}
 
-exports.list = (query) => {
+export function list(query) {
   let items = Array.from(store.values());
 
   const {
@@ -70,9 +70,9 @@ exports.list = (query) => {
     limit: Number(limit),
     total
   };
-};
+}
 
-exports.getById = (id) => {
+export function getById(id) {
   const item = store.get(id);
 
   if (!item) {
@@ -80,10 +80,10 @@ exports.getById = (id) => {
   }
 
   return item;
-};
+}
 
-exports.changeStatus = (id, status) => {
-  const item = exports.getById(id);
+export function changeStatus(id, status) {
+  const item = getById(id);
 
   if (!transitions[item.status].includes(status)) {
     throw new AppError(409, "INVALID_TRANSITION", "Invalid transition");
@@ -93,4 +93,4 @@ exports.changeStatus = (id, status) => {
   item.updatedAt = new Date().toISOString();
 
   return item;
-};
+}

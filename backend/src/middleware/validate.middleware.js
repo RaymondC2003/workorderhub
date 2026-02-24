@@ -1,9 +1,9 @@
-const { AppError } = require("../utils/errors.util");
+import { AppError } from "../utils/errors.util.js";
 
 const DEPARTMENTS = ["FACILITIES", "IT", "SECURITY", "HR"];
 const PRIORITIES = ["LOW", "MEDIUM", "HIGH"];
 
-exports.validateCreate = (req, res, next) => {
+export function validateCreate(req, res, next) {
   const {
     title,
     description,
@@ -41,4 +41,4 @@ exports.validateCreate = (req, res, next) => {
   }
 
   next();
-};
+}

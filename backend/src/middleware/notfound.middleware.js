@@ -1,5 +1,5 @@
-const { AppError } = require("../utils/errors.util");
+import { AppError } from "../utils/errors.util.js";
 
-module.exports = (req, res, next) => {
+export default (req, res, next) => {
   next(new AppError(404, "NOT_FOUND", "Route not found"));
 };

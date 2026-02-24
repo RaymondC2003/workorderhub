@@ -1,8 +1,8 @@
-const express = require("express");
-const controller = require("../controllers/workorders.controller");
-const { validateCreate } = require("../middleware/validate.middleware");
-const upload = require("../middleware/upload.middleware");
-const bulkController = require("../controllers/bulk.controller");
+import express from "express";
+import * as controller from "../controllers/workorders.controller.js";
+import { validateCreate } from "../middleware/validate.middleware.js";
+import upload from "../middleware/upload.middleware.js";
+import * as bulkController from "../controllers/bulk.controller.js";
 
 const router = express.Router();
 
@@ -18,4 +18,4 @@ router.post(
 router.get("/:id", controller.getById);
 router.patch("/:id/status", controller.changeStatus);
 
-module.exports = router;
+export default router;

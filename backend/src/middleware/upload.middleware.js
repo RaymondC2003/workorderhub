@@ -1,5 +1,5 @@
-const multer = require("multer");
-const { AppError } = require("../utils/errors.util");
+import multer from "multer";
+import { AppError } from "../utils/errors.util.js";
 
 const upload = multer({
   limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
@@ -13,4 +13,4 @@ const upload = multer({
   }
 });
 
-module.exports = upload;
+export default upload;

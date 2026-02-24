@@ -1,7 +1,7 @@
-const { parse } = require("csv-parse/sync");
-const { AppError } = require("../utils/errors.util");
-const { success } = require("../utils/response.util");
-const service = require("../services/workorders.service");
+import { parse } from "csv-parse/sync";
+import { AppError } from "../utils/errors.util.js";
+import { success } from "../utils/response.util.js";
+import * as service from "../services/workorders.service.js";
 
 const REQUIRED_HEADERS = [
   "title",
@@ -11,7 +11,7 @@ const REQUIRED_HEADERS = [
   "requesterName"
 ];
 
-exports.bulkUpload = (req, res, next) => {
+export function bulkUpload(req, res, next) {
   try {
     if (!req.file) {
       throw new AppError(400, "VALIDATION_ERROR", "CSV file required");
@@ -68,4 +68,4 @@ exports.bulkUpload = (req, res, next) => {
   } catch (err) {
     next(err);
   }
-};
+}
