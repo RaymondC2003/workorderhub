@@ -38,3 +38,13 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+
+
+## Business Case Summary
+
+Many organizations still handle internal requests through emails and spreadsheets, leading to inconsistent formats, lost items, and limited traceability. WorkOrderHub solves this by providing a centralized, structured workflow with strict validation, controlled status transitions, and standardized error handling. The frontend adds visual management and transparency. Overall, it replaces fragmented manual processes with a Lean‑consistent digital workflow that improves efficiency, accuracy, and governance.
+
+
+## TPS Alignment Explanation
+
+WorkOrderHub applies key Toyota Production System (TPS) principles to digital operations. It enforces Standard Work through strict input validation, ensures Quality at the Source by rejecting invalid requests immediately, and maintains Flow Control with a controlled status lifecycle. The system provides Visual Management through clear status visibility and consistent UI, while centralized error handling functions as a digital Andon, surfacing issues instantly. Together, these elements create a Lean‑consistent workflow that reduces waste, improves accuracy, and strengthens operational discipline
